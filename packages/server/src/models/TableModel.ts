@@ -60,7 +60,8 @@ tableSchema.index({ storeId: 1, tableNumber: 1 }, { unique: true });
 
 // BR-TABLE-02: API 응답 시 password, __v 필드 자동 제거
 tableSchema.set('toJSON', {
-  transform(_doc: Document, ret: Record<string, unknown>) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transform(_doc: any, ret: any) {
     delete ret.password;
     delete ret.__v;
     return ret;

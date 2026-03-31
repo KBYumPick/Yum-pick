@@ -79,7 +79,7 @@ export async function tableLogin(req: Request, res: Response): Promise<void> {
   }
 
   // BR-AUTH-08: storeId + tableNumber 검증
-  const table = await mongoose.connection.db
+  const table = await mongoose.connection.db!
     .collection('tables')
     .findOne({ storeId, tableNumber });
 
@@ -101,7 +101,7 @@ export async function tableLogin(req: Request, res: Response): Promise<void> {
   const sessionId = uuidv4();
 
   // 테이블 세션 업데이트
-  await mongoose.connection.db.collection('tables').updateOne(
+  await mongoose.connection.db!.collection('tables').updateOne(
     { _id: table._id },
     {
       $set: {
