@@ -3,8 +3,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 // TODO: @yumpick/shared 패키지 설정 후 import 경로 변경
 import type { IOrderHistory } from '../../../shared/src/types';
 
-// API 기본 URL (환경변수 또는 기본값)
-const API_BASE = import.meta.env.VITE_API_BASE || '/api';
+// API 기본 URL (환경변수 또는 기본값) — Jest 환경 호환
+const API_BASE = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_BASE) || '/api';
 
 // TODO: Unit 1 (채원) AdminAuthService에서 storeId, token을 가져오는 로직으로 교체
 const getAuthHeaders = (): Record<string, string> => {

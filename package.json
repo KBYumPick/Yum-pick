@@ -1,6 +1,5 @@
 {
   "name": "yumpick",
-<<<<<<< HEAD
   "version": "1.0.0",
   "private": true,
   "workspaces": [
@@ -10,10 +9,4 @@
     "build": "npm run build --workspaces --if-present",
     "test": "npm test --workspaces --if-present"
   }
-=======
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ]
->>>>>>> origin/feat/unit3-cart-order
 }

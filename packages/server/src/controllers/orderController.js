@@ -1,11 +1,11 @@
-import Order from '../models/Order.js';
-import { CART_MIN_QUANTITY, CART_MAX_QUANTITY } from '../types/order.types.js';
+const OrderModel = require('../models/OrderModel').default;
+const { CART_MIN_QUANTITY, CART_MAX_QUANTITY } = require('../types/order.types');
 
 /**
  * 주문 생성
  * POST /api/order/create
  */
-export async function createOrder(req, res) {
+async function createOrder(req, res) {
   try {
     const { storeId, tableId, sessionId, items, totalAmount } = req.body;
 
@@ -38,9 +38,9 @@ export async function createOrder(req, res) {
     }
 
     // 주문 번호 생성
-    const orderNumber = await Order.generateOrderNumber(storeId);
+    const orderNumber = await OrderModel.generateOrderNumber(storeId);
 
-    const order = await Order.create({
+    const order = await OrderModel.create({
       storeId,
       tableId,
       sessionId,
@@ -55,8 +55,8 @@ export async function createOrder(req, res) {
     // unique 인덱스 중복 시 재시도
     if (error.code === 11000) {
       try {
-        const orderNumber = await Order.generateOrderNumber(req.body.storeId);
-        const order = await Order.create({
+        const orderNumber = await OrderModel.generateOrderNumber(req.body.storeId);
+        const order = await OrderModel.create({
           ...req.body,
           orderNumber,
           status: 'pending',
@@ -74,7 +74,7 @@ export async function createOrder(req, res) {
  * 주문 목록 조회
  * GET /api/order/list?storeId=&tableId=&sessionId=&status=
  */
-export async function listOrders(req, res) {
+async function listOrders(req, res) {
   try {
     const { storeId, tableId, sessionId, status } = req.query;
 
@@ -84,7 +84,7 @@ export async function listOrders(req, res) {
     if (sessionId) filter.sessionId = sessionId;
     if (status) filter.status = status;
 
-    const orders = await Order.find(filter).sort({ createdAt: 1 });
+    const orders = await OrderModel.find(filter).sort({ createdAt: 1 });
     return res.json(orders);
   } catch (error) {
     return res.status(500).json({ error: '주문 목록 조회에 실패했습니다.' });
@@ -95,9 +95,9 @@ export async function listOrders(req, res) {
  * 주문 상세 조회
  * GET /api/order/detail/:id
  */
-export async function getOrder(req, res) {
+async function getOrder(req, res) {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await OrderModel.findById(req.params.id);
     if (!order) {
       return res.status(404).json({ error: '주문을 찾을 수 없습니다.' });
     }
@@ -112,3 +112,5 @@ export async function getOrder(req, res) {
     return res.status(500).json({ error: '주문 조회에 실패했습니다.' });
   }
 }
+
+module.exports = { createOrder, listOrders, getOrder };

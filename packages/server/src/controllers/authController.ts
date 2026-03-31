@@ -90,7 +90,7 @@ export async function tableLogin(req: Request, res: Response): Promise<void> {
   }
 
   // BR-AUTH-02: 비밀번호 비교
-  const isMatch = await comparePassword(password, table.passwordHash);
+  const isMatch = await comparePassword(password, table.password);
   if (!isMatch) {
     recordLoginFailure(attemptKey);
     res.status(401).json({ error: '인증에 실패했습니다.' });

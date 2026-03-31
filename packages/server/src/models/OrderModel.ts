@@ -56,6 +56,31 @@ const orderSchema = new Schema<IOrderDocument>(
   }
 );
 
-const OrderModel = mongoose.model<IOrderDocument>('Order', orderSchema);
+// 주문 번호 생성 (YYYYMMDD-NNN)
+orderSchema.statics.generateOrderNumber = async function (storeId: string): Promise<string> {
+  const now = new Date();
+  const dateStr =
+    String(now.getFullYear()) +
+    String(now.getMonth() + 1).padStart(2, '0') +
+    String(now.getDate()).padStart(2, '0');
+
+  const lastOrder = await this.findOne(
+    { storeId, orderNumber: { $regex: `^${dateStr}-` } },
+    { orderNumber: 1 },
+    { sort: { orderNumber: -1 } }
+  );
+
+  const seq = lastOrder
+    ? parseInt(lastOrder.orderNumber.split('-')[1], 10) + 1
+    : 1;
+
+  return `${dateStr}-${String(seq).padStart(3, '0')}`;
+};
+
+interface OrderModelType extends mongoose.Model<IOrderDocument> {
+  generateOrderNumber(storeId: string): Promise<string>;
+}
+
+const OrderModel = mongoose.model<IOrderDocument>('Order', orderSchema) as OrderModelType;
 
 export default OrderModel;
