@@ -1,0 +1,71 @@
+.card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.card--new-order {
+  border-color: #ff6b35;
+  background: #fff8f5;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 107, 53, 0); }
+}
+
+.card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.card__table-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+.card__total {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ff6b35;
+}
+
+.card__preview {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 12px;
+}
+
+.card__badges {
+  display: flex;
+  gap: 8px;
+}
+
+.badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.badge--pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.badge--preparing {
+  background: #cce5ff;
+  color: #004085;
+}
