@@ -1,38 +1,63 @@
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useAdminAuthStore } from './stores/authStore';
+import { restoreSession, logout } from './services/authService';
+import LoginPage from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 
-/**
- * ============================================
- * 관리자앱 라우팅 (각 유닛 담당자가 자신의 페이지 작성)
- * ============================================
- *
- * Unit1 (채원): /login → LoginPage
- * Unit2 (지승): /menu → MenuManagementPage
- * Unit4 (덕인): /dashboard → DashboardPage ✅ 구현 완료
- * Unit5 (준형): /tables → TableManagementPage
- */
+export default function App() {
+  const [checking, setChecking] = useState(true);
+  const { isAuthenticated, setAuth, clearAuth } = useAdminAuthStore();
 
-function App() {
+  useEffect(() => {
+    const session = restoreSession();
+    if (session) {
+      setAuth(session);
+    }
+    setChecking(false);
+  }, [setAuth]);
+
+  const handleLogout = () => {
+    logout();
+    clearAuth();
+  };
+
+  if (checking) {
+    return <div style={{ textAlign: 'center', marginTop: 100 }}>로딩 중...</div>;
+  }
+
   return (
     <BrowserRouter>
       <Routes>
         {/* Unit1 (채원): 로그인 */}
-        {/* <Route path="/login" element={<LoginPage />} /> */}
+        <Route path="/login" element={<LoginPage />} />
 
-        {/* Unit2 (지승): 메뉴 관리 */}
-        {/* <Route path="/menu" element={<MenuManagementPage />} /> */}
-
-        {/* Unit4 (덕인): 주문 대시보드 ✅ */}
-        <Route path="/dashboard" element={<DashboardPage />} />
+        {/* Unit4 (덕인): 주문 대시보드 */}
+        <Route
+          path="/dashboard"
+          element={
+            isAuthenticated ? (
+              <div>
+                <button data-testid="logout-button" onClick={handleLogout} style={{ float: 'right', margin: 16 }}>
+                  로그아웃
+                </button>
+                <DashboardPage />
+              </div>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
 
         {/* Unit5 (준형): 테이블 관리 */}
-        {/* <Route path="/tables" element={<TableManagementPage />} /> */}
+        <Route path="/tables" element={isAuthenticated ? <div>테이블 관리 (Unit 5에서 구현)</div> : <Navigate to="/login" />} />
+
+        {/* Unit2 (지승): 메뉴 관리 */}
+        <Route path="/menus" element={isAuthenticated ? <div>메뉴 관리 (Unit 2에서 구현)</div> : <Navigate to="/login" />} />
 
         {/* 기본 리다이렉트 */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} />} />
       </Routes>
     </BrowserRouter>
   );
 }
-
-export default App;

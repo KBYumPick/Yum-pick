@@ -1,42 +1,38 @@
-// 인증 미들웨어 스텁
-// ⚠️ Unit 5 스텁: Unit 1 (인증) 완성 시 이 파일은 대체됩니다.
-// Unit 1에서 JWT 검증 및 역할 기반 접근 제어를 구현합니다.
-
 import { Request, Response, NextFunction } from 'express';
+import { verifyToken } from '../utils/auth';
+import { AuthTokenPayload } from '../types/auth';
 
-/**
- * 관리자 인증 미들웨어 (스텁)
- * - 개발 환경에서는 Authorization 헤더의 JWT를 디코딩하여 req.user에 설정
- * - JWT가 없는 경우 기본 개발용 사용자 정보를 설정
- * - ⚠️ 프로덕션에서는 반드시 Unit 1의 실제 구현으로 교체해야 합니다.
- */
-export const requireAdmin = (req: Request, _res: Response, next: NextFunction): void => {
-  try {
-    const authHeader = req.headers.authorization;
-
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.split(' ')[1];
-      // 간단한 base64 디코딩 시도 (JWT payload 부분)
-      const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-      (req as any).user = {
-        storeId: payload.storeId,
-        role: payload.role || 'admin',
-      };
-    } else {
-      // 개발용 기본 사용자 (JWT 없는 경우)
-      (req as any).user = {
-        storeId: 'dev-store-id',
-        role: 'admin',
-      };
+// Express Request에 user 필드 추가
+declare global {
+  namespace Express {
+    interface Request {
+      user?: AuthTokenPayload;
     }
+  }
+}
 
+// JWT 인증 미들웨어 - 모든 보호된 라우트에 적용
+export function authenticate(req: Request, res: Response, next: NextFunction): void {
+  const header = req.headers.authorization;
+  if (!header?.startsWith('Bearer ')) {
+    res.status(401).json({ error: '인증 토큰이 필요합니다.' });
+    return;
+  }
+
+  try {
+    const token = header.slice(7);
+    req.user = verifyToken(token);
     next();
   } catch {
-    // 디코딩 실패 시에도 개발용 기본값 설정
-    (req as any).user = {
-      storeId: 'dev-store-id',
-      role: 'admin',
-    };
-    next();
+    res.status(401).json({ error: '유효하지 않거나 만료된 토큰입니다.' });
   }
-};
+}
+
+// BR-AUTH-05: 관리자 역할 검증 미들웨어
+export function requireAdmin(req: Request, res: Response, next: NextFunction): void {
+  if (req.user?.role !== 'admin') {
+    res.status(403).json({ error: '관리자 권한이 필요합니다.' });
+    return;
+  }
+  next();
+}

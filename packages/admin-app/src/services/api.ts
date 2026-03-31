@@ -1,7 +1,34 @@
-const API_BASE = '/api';
+import axios from 'axios';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+const api = axios.create({ baseURL: API_BASE });
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('yumpick_admin_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// 401 응답 시 자동 로그아웃
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('yumpick_admin_token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  },
+);
+
+export default api;
+
+// Legacy fetch-based API (for backward compatibility)
 function getToken(): string | null {
-  return localStorage.getItem('admin_token');
+  return localStorage.getItem('yumpick_admin_token');
 }
 
 function getStoreId(): string | null {
@@ -27,31 +54,27 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
   return res.json();
 }
 
-export const api = {
+export const legacyApi = {
   getToken,
   getStoreId,
 
-  // 주문 목록 조회
   fetchOrders(storeId: string) {
-    return request<import('../types').Order[]>(`/order/list?storeId=${storeId}`);
+    return request<any[]>(`/api/order/list?storeId=${storeId}`);
   },
 
-  // 테이블 목록 조회
   fetchTables(storeId: string) {
-    return request<import('../types').Table[]>(`/table/list?storeId=${storeId}`);
+    return request<any[]>(`/api/table/list?storeId=${storeId}`);
   },
 
-  // 주문 상태 변경
   updateOrderStatus(orderId: string, status: string) {
-    return request<import('../types').Order>(`/order/status/${orderId}`, {
+    return request<any>(`/api/order/status/${orderId}`, {
       method: 'PUT',
       body: JSON.stringify({ status }),
     });
   },
 
-  // 주문 삭제
   deleteOrder(orderId: string) {
-    return request<{ success: boolean }>(`/order/delete/${orderId}`, {
+    return request<{ success: boolean }>(`/api/order/delete/${orderId}`, {
       method: 'DELETE',
     });
   },
