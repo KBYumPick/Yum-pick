@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './stores/authStore';
 import { autoLogin, hasCredentials } from './services/authService';
 import TableSetupPage from './pages/TableSetupPage';
+import { OrderHistoryPage } from './pages/OrderHistoryPage';
 
 // US-02: 자동 로그인 흐름
 export default function App() {
@@ -29,9 +30,10 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/setup" element={<TableSetupPage />} />
-        {/* 메뉴/주문 페이지는 다른 유닛에서 구현 예정 */}
+        {/* Unit2 (지승): 메뉴 */}
         <Route path="/menu" element={isAuthenticated ? <div>메뉴 페이지 (Unit 2에서 구현)</div> : <Navigate to="/setup" />} />
-        <Route path="/orders" element={isAuthenticated ? <div>주문 내역 (Unit 3에서 구현)</div> : <Navigate to="/setup" />} />
+        {/* Unit3 (유진): 주문 내역 */}
+        <Route path="/orders" element={isAuthenticated ? <OrderHistoryPage /> : <Navigate to="/setup" />} />
         <Route path="*" element={<Navigate to={isAuthenticated ? '/menu' : '/setup'} />} />
       </Routes>
     </BrowserRouter>
