@@ -1,0 +1,9 @@
+{
+  "name": "yumpick",
+  "private": true,
+  "workspaces": [
+    "packages/server",
+    "packages/customer-app",
+    "packages/admin-app"
+  ]
+}
