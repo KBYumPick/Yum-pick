@@ -1,0 +1,80 @@
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dashboard__header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.connection-status {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.connected {
+  color: #28a745;
+}
+
+.disconnected {
+  color: #dc3545;
+}
+
+.dashboard__error {
+  background: #fff3cd;
+  color: #856404;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.dashboard__filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.filter-btn:hover {
+  background: #e0e0e0;
+}
+
+.filter-btn--active {
+  background: #ff6b35;
+  color: #fff;
+}
+
+.dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.dashboard__loading,
+.dashboard__empty {
+  text-align: center;
+  color: #999;
+  padding: 48px 0;
+  font-size: 16px;
+}

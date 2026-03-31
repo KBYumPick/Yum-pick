@@ -12,6 +12,9 @@ export interface ITable {
   updatedAt: string;
 }
 
+/** duckin 브랜치의 Table 타입 (ITable alias) */
+export type Table = ITable;
+
 /** 테이블 생성 요청 */
 export interface ICreateTableRequest {
   storeId: string;
