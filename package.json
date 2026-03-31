@@ -1,0 +1,7 @@
+{
+  "name": "yumpick",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
