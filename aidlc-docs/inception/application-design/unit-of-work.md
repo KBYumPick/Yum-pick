@@ -8,7 +8,7 @@
 ---
 
 ## Unit 1: 인증 (Authentication)
-- **담당**: 개발자 1
+- **담당**: 채원
 - **범위**: 관리자 로그인 + 테이블 로그인 + 미들웨어
 - **백엔드**: AuthController, AuthModel, Middleware (JWT, bcrypt)
 - **프론트엔드(고객앱)**: 테이블 초기 설정 화면, 자동 로그인 로직, CustomerAuthService
@@ -16,7 +16,7 @@
 - **User Stories**: US-01, US-02, US-09
 
 ## Unit 2: 메뉴 (Menu)
-- **담당**: 개발자 2
+- **담당**: 지승
 - **범위**: 메뉴 조회(고객) + 메뉴 관리(관리자)
 - **백엔드**: MenuController, MenuModel
 - **프론트엔드(고객앱)**: MenuPage, MenuCard 컴포넌트
@@ -24,21 +24,21 @@
 - **User Stories**: US-03, US-04, US-16, US-17
 
 ## Unit 3: 장바구니 & 주문 생성 (Cart & Order Creation)
-- **담당**: 개발자 3
+- **담당**: 유진
 - **범위**: 장바구니 + 주문 생성 + 주문 내역 조회(고객)
 - **백엔드**: OrderController (createOrder, listOrders, getOrder)
 - **프론트엔드(고객앱)**: CartComponent, 주문 확인 화면, OrderHistoryPage, CustomerStore (cart/order 부분)
 - **User Stories**: US-05, US-06, US-07, US-08
 
 ## Unit 4: 주문 모니터링 (Order Monitoring)
-- **담당**: 개발자 4
+- **담당**: 덕인
 - **범위**: 실시간 대시보드 + 주문 상태 변경 + 주문 삭제
 - **백엔드**: OrderController (updateStatus, deleteOrder), SSEController, SSEService
 - **프론트엔드(관리자앱)**: DashboardPage, OrderCard, SSE 연결 로직, AdminStore (orders 부분)
 - **User Stories**: US-10, US-11, US-12
 
 ## Unit 5: 테이블 관리 (Table Management)
-- **담당**: 개발자 5
+- **담당**: 준형
 - **범위**: 테이블 CRUD + 세션 관리 + 과거 주문 조회
 - **백엔드**: TableController, TableModel, SessionService, OrderController (listHistory)
 - **프론트엔드(관리자앱)**: TableManagementPage, TableCard 컴포넌트, AdminStore (tables 부분)
